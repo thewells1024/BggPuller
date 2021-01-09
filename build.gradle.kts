@@ -25,6 +25,11 @@ dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    // library dependencies
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.+")
+    implementation("com.fasterxml.woodstox:woodstox-core:5.1.+")
+
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
@@ -34,9 +39,13 @@ dependencies {
 
 sourceSets {
     main {
-        "src"
+        java {
+            srcDirs("src")
+        }
     }
     test {
-        "tst"
+        java {
+            srcDirs("tst")
+        }
     }
 }
