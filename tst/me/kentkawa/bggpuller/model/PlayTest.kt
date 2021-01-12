@@ -3,15 +3,13 @@ package me.kentkawa.bggpuller.model
 import com.fasterxml.jackson.module.kotlin.readValue
 import me.kentkawa.bggpuller.util.XmlParserBaseTest
 import java.io.File
-import java.text.DateFormat
 import java.time.LocalDate
-import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class PlayTest: XmlParserBaseTest() {
+class PlayTest : XmlParserBaseTest() {
     private val PLAYER_FILE = File("tst-resources/player.xml")
     private val PLAY_FILE = File("tst-resources/play.xml")
 
