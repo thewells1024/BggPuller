@@ -17,7 +17,7 @@ class XMLBooleanConverterTest {
     @Test
     fun testDeserializeTrue() {
         val converter = XMLBooleanConverter()
-        every {ctxt.readValue<Int>(p, Int::class.java)} returns 1
+        every { ctxt.readValue<Int>(p, Int::class.java) } returns 1
         assertTrue(converter.deserialize(p, ctxt))
         verify(exactly = 1) {
             ctxt.readValue<Int>(p, Int::class.java)
@@ -27,7 +27,7 @@ class XMLBooleanConverterTest {
     @Test
     fun testDeserializeFalse() {
         val converter = XMLBooleanConverter()
-        every {ctxt.readValue<Int>(p, Int::class.java)} returns 0
+        every { ctxt.readValue<Int>(p, Int::class.java) } returns 0
         assertFalse(converter.deserialize(p, ctxt))
         verify(exactly = 1) {
             ctxt.readValue<Int>(p, Int::class.java)
@@ -43,7 +43,7 @@ class XMLBooleanConverterTest {
     @Test(expected = IllegalStateException::class)
     fun testDeserializeIllegalValue() {
         val converter = XMLBooleanConverter()
-        every {ctxt.readValue<Int>(p, Int::class.java)} returns -1
+        every { ctxt.readValue<Int>(p, Int::class.java) } returns -1
         converter.deserialize(p, ctxt)
     }
 }

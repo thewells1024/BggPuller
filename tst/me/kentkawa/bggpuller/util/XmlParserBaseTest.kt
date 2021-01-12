@@ -1,4 +1,4 @@
-package me.kentkawa.bggpuller.util;
+package me.kentkawa.bggpuller.util
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
@@ -12,6 +12,6 @@ abstract class XmlParserBaseTest {
     @BeforeTest
     fun setup() {
         xmlMapper.registerKotlinModule()
-                .registerModule(JavaTimeModule())
+            .registerModule(JavaTimeModule())
     }
 }
