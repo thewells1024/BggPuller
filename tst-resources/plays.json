@@ -1,0 +1,198 @@
+{
+  "username": "thewells1024",
+  "userid": "1357032",
+  "total": "4",
+  "page": "1",
+  "termsofuse": "https://boardgamegeek.com/xmlapi/termsofuse",
+  "play": [
+    {
+      "id": "48364506",
+      "date": "2021-01-10",
+      "quantity": "1",
+      "length": "75",
+      "incomplete": "0",
+      "nowinstats": "0",
+      "location": "",
+      "item": {
+        "name": "Gloomhaven: Jaws of the Lion",
+        "objecttype": "thing",
+        "objectid": "291457",
+        "subtypes": {
+          "subtype": [
+            {
+              "value": "boardgame"
+            },
+            {
+              "value": "boardgameintegration"
+            }
+          ]
+        }
+      },
+      "comments": " #bgstats",
+      "players": {
+        "player": [
+          {
+            "username": "",
+            "userid": "0",
+            "name": "N.",
+            "startposition": "",
+            "color": "Demolitionist",
+            "score": "0",
+            "new": "0",
+            "rating": "0",
+            "win": "1"
+          },
+          {
+            "username": "thewells1024",
+            "userid": "1357032",
+            "name": "Kent",
+            "startposition": "",
+            "color": "Red Guard",
+            "score": "0",
+            "new": "0",
+            "rating": "0",
+            "win": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "48362581",
+      "date": "2021-01-09",
+      "quantity": "1",
+      "length": "71",
+      "incomplete": "0",
+      "nowinstats": "0",
+      "location": "",
+      "item": {
+        "name": "Blackout: Hong Kong",
+        "objecttype": "thing",
+        "objectid": "262215",
+        "subtypes": {
+          "subtype": {
+            "value": "boardgame"
+          }
+        }
+      },
+      "comments": " #bgstats",
+      "players": {
+        "player": [
+          {
+            "username": "",
+            "userid": "0",
+            "name": "N.",
+            "startposition": "start player",
+            "color": "",
+            "score": "58",
+            "new": "1",
+            "rating": "0",
+            "win": "0"
+          },
+          {
+            "username": "thewells1024",
+            "userid": "1357032",
+            "name": "Kent",
+            "startposition": "",
+            "color": "",
+            "score": "77",
+            "new": "1",
+            "rating": "0",
+            "win": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "48325491",
+      "date": "2021-01-08",
+      "quantity": "1",
+      "length": "105",
+      "incomplete": "0",
+      "nowinstats": "0",
+      "location": "",
+      "item": {
+        "name": "Pendulum",
+        "objecttype": "thing",
+        "objectid": "312804",
+        "subtypes": {
+          "subtype": {
+            "value": "boardgame"
+          }
+        }
+      },
+      "comments": " #bgstats",
+      "players": {
+        "player": [
+          {
+            "username": "",
+            "userid": "0",
+            "name": "N.",
+            "startposition": "",
+            "color": "",
+            "score": "1",
+            "new": "1",
+            "rating": "0",
+            "win": "0"
+          },
+          {
+            "username": "thewells1024",
+            "userid": "1357032",
+            "name": "Kent",
+            "startposition": "",
+            "color": "",
+            "score": "22",
+            "new": "1",
+            "rating": "0",
+            "win": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "48156162",
+      "date": "2021-01-02",
+      "quantity": "1",
+      "length": "200",
+      "incomplete": "0",
+      "nowinstats": "0",
+      "location": "",
+      "item": {
+        "name": "Terraforming Mars",
+        "objecttype": "thing",
+        "objectid": "167791",
+        "subtypes": {
+          "subtype": {
+            "value": "boardgame"
+          }
+        }
+      },
+      "comments": " #bgstats",
+      "players": {
+        "player": [
+          {
+            "username": "thewells1024",
+            "userid": "1357032",
+            "name": "Kent",
+            "startposition": "",
+            "color": "",
+            "score": "125",
+            "new": "0",
+            "rating": "0",
+            "win": "1"
+          },
+          {
+            "username": "",
+            "userid": "0",
+            "name": "N.",
+            "startposition": "",
+            "color": "",
+            "score": "80",
+            "new": "1",
+            "rating": "0",
+            "win": "0"
+          }
+        ]
+      }
+    }
+  ]
+}
