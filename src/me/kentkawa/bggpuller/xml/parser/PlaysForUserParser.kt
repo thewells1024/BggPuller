@@ -10,7 +10,7 @@ import me.kentkawa.bggpuller.model.PlaysForUser
 import java.lang.IllegalStateException
 import java.time.LocalDate
 
-class PlaysForUserParser: StdDeserializer<PlaysForUser>(PlaysForUser::class.java) {
+class PlaysForUserParser : StdDeserializer<PlaysForUser>(PlaysForUser::class.java) {
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): PlaysForUser {
         val json = ctxt?.readTree(p) ?: throw IllegalStateException("Cannot read tree")
         val username = json.get("username").textValue()
