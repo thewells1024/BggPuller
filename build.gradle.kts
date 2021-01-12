@@ -28,7 +28,7 @@ dependencies {
     // library dependencies
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.+")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.x")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.+")
     implementation("com.fasterxml.woodstox:woodstox-core:5.1.+")
 
     // Use the Kotlin test library.
