@@ -1,0 +1,5 @@
+<item name="Terraforming Mars" objecttype="thing" objectid="167791">
+    <subtypes>
+        <subtype value="boardgame" />
+    </subtypes>
+</item>

@@ -1,0 +1,12 @@
+<play id="48156162" date="2021-01-02" quantity="1" length="200" incomplete="0" nowinstats="0" location="">
+    <item name="Terraforming Mars" objecttype="thing" objectid="167791">
+        <subtypes>
+            <subtype value="boardgame" />
+        </subtypes>
+    </item>
+    <comments> #bgstats</comments>
+    <players>
+        <player username="thewells1024" userid="1357032" name="Kent" startposition="" color="" score="125" new="0" rating="0" win="1" />
+        <player username="" userid="0" name="N." startposition="" color="" score="80" new="1" rating="0" win="0" />
+    </players>
+</play>
