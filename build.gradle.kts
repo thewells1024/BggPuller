@@ -8,6 +8,7 @@ plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.3.72"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+    id("com.softeq.gradle.itest") version "1.0.4"
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
@@ -40,6 +41,9 @@ dependencies {
 
     // Test Dependencies
     testImplementation("io.mockk:mockk:1.10.0")
+
+    // Integ Tests
+    itestImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
 sourceSets {
@@ -54,6 +58,11 @@ sourceSets {
         }
         resources {
             srcDirs("tst-resources")
+        }
+    }
+    itest {
+        java {
+            srcDirs("integ-tst")
         }
     }
 }
