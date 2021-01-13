@@ -15,7 +15,6 @@ class PlaysForUserParser : StdDeserializer<PlaysForUser>(PlaysForUser::class.jav
         val json = ctxt?.readTree(p) ?: throw IllegalStateException("Cannot read tree")
         val username = json.get("username").textValue()
         val plays = parsePlays(json)
-        print(json)
         return PlaysForUser(username, plays)
     }
 
