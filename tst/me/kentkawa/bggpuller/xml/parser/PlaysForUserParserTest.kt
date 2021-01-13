@@ -13,7 +13,7 @@ class PlaysForUserParserTest {
         val PLAYS_JSON = File("tst-resources/plays.json")
     }
     @Test
-    fun testDeserializePlays() {
+    fun testDeserializePlaysForUser() {
         val objectMapper = ObjectMapper().registerKotlinModule()
         val playsForUser: PlaysForUser = objectMapper.readValue(PLAYS_JSON)
         assertEquals("thewells1024", playsForUser.username)
