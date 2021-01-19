@@ -1,8 +1,6 @@
 dist: xenial
 language: java
 jdk:
-  - jdk8
-  - jdk11
   - openjdk8
   - openjdk11
 before_install:
