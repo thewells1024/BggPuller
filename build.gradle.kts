@@ -23,6 +23,7 @@ repositories {
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -32,6 +33,7 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.+")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.+")
     implementation("com.fasterxml.woodstox:woodstox-core:5.1.+")
+    implementation("com.squareup.okhttp3:okhttp")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")

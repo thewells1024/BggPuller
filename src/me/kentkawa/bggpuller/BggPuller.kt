@@ -7,17 +7,21 @@ import me.kentkawa.bggpuller.model.BggCollection
 import me.kentkawa.bggpuller.model.CollectionEntry
 import me.kentkawa.bggpuller.model.Game
 import me.kentkawa.bggpuller.model.PlaysForUser
-import java.net.URI
-import java.net.URL
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.lang.IllegalStateException
 import java.time.LocalDate
 
-class BggPuller(private val xmlMapper: ObjectMapper, private val client: HttpClient) {
-    private val BASE_URL = "https://www.boardgamegeek.com/xmlapi2"
-    private val COLLECTION_PATH = "collection"
-    private val PLAY_PATH = "plays"
+class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpClient) {
+    companion object {
+        const val SCHEME = "https"
+        const val HOST = "www.boardgamegeek.com"
+        const val API_BASE_PATH = "xmlapi2"
+        const val COLLECTION_PATH = "collection"
+        const val PLAY_PATH = "plays"
+        const val BACKOFF_MULTIPLIER = 1.5
+    }
 
     data class PlaysForUserRequestConfig(
         val minDate: LocalDate? = null,
@@ -25,14 +29,17 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: HttpCli
     )
 
     fun getPlaysForUser(username: String, extraConfig: PlaysForUserRequestConfig? = null): PlaysForUser {
-        var requestUrl = "$BASE_URL/$PLAY_PATH?username=$username"
+        val urlBuilder = getBggApiUrlBuilder()
+            .addPathSegment(PLAY_PATH)
+            .addQueryParameter("username", username)
         if (extraConfig?.minDate != null) {
-            requestUrl += "&mindate=${extraConfig.minDate}"
+            urlBuilder.addQueryParameter("mindate", extraConfig.minDate.toString())
         }
         if (extraConfig?.maxDate != null) {
-            requestUrl += "&maxdate=${extraConfig.maxDate}"
+            urlBuilder.addQueryParameter("maxdate", extraConfig.maxDate.toString())
         }
-        return xmlMapper.readValue(URL(requestUrl))
+        val xmlData = sendGetRequest(urlBuilder.build())
+        return xmlMapper.readValue(xmlData)
     }
 
     fun getCollectionEntry(username: String, game: Game): CollectionEntry {
@@ -40,8 +47,13 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: HttpCli
     }
 
     fun getCollectionEntry(username: String, gameId: Int): CollectionEntry {
-        var requestUrl = "$BASE_URL/$COLLECTION_PATH?username=$username&id=$gameId&stats=1"
-        val bggCollection: BggCollection = xmlMapper.readValue(readWithRetries(requestUrl))
+        val urlBuilder = getBggApiUrlBuilder()
+            .addPathSegment(COLLECTION_PATH)
+            .addQueryParameter("username", username)
+            .addQueryParameter("id", gameId.toString())
+            .addQueryParameter("stats", "1")
+        val xmlData = sendGetRequest(urlBuilder.build(), retryOn202 = true)
+        val bggCollection: BggCollection = xmlMapper.readValue(xmlData)
         if (bggCollection.entries.size != 1) {
             throw MultipleEntriesInBggCollectionResponseException(
                 "There were ${bggCollection.entries.size} entries when" +
@@ -51,17 +63,25 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: HttpCli
         return bggCollection.entries[0]
     }
 
-    private fun readWithRetries(url: String): String {
-        val request = HttpRequest.newBuilder(URI(url))
-            .GET()
+    private fun getBggApiUrlBuilder(): HttpUrl.Builder {
+        return HttpUrl.Builder()
+            .scheme(SCHEME)
+            .host(HOST)
+            .addPathSegment(API_BASE_PATH)
+    }
+
+    private fun sendGetRequest(url: HttpUrl, retryOn202: Boolean = false): String {
+        var request = Request.Builder()
+            .url(url)
             .build()
         var backoff = 1.0
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        while (response?.statusCode() != 200) {
+        var response = client.newCall(request).execute()
+        while (retryOn202 && response.code == 202) {
+            response.close()
             Thread.sleep((backoff * 1000).toLong())
-            backoff *= 1.5
-            response = client.send(request, HttpResponse.BodyHandlers.ofString())
+            backoff *= BACKOFF_MULTIPLIER
+            response = client.newCall(request).execute()
         }
-        return response.body()
+        return response.use { it.body?.string() ?: throw IllegalStateException("cannot read response") }
     }
 }

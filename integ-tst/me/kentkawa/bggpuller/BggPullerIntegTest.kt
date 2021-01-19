@@ -3,7 +3,7 @@ package me.kentkawa.bggpuller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import java.net.http.HttpClient
+import okhttp3.OkHttpClient
 import java.time.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,7 +15,7 @@ class BggPullerIntegTest {
     }
 
     val xmlMapper: ObjectMapper = XmlMapper().registerKotlinModule()
-    val client = HttpClient.newHttpClient()
+    val client = OkHttpClient()
 
     @Test
     fun testGetPlaysForUser() {

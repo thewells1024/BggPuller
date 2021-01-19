@@ -1,9 +1,9 @@
 dist: xenial
 language: java
 jdk:
-  - jdk10
+  - jdk8
   - jdk11
-  - openjdk10
+  - openjdk8
   - openjdk11
 before_install:
   - wget https://services.gradle.org/distributions/gradle-6.8-bin.zip
