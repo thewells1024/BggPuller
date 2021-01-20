@@ -74,4 +74,59 @@ class BggPullerTest : XmlParserBaseTest() {
         val puller = BggPuller(xmlMapper, httpClient)
         puller.getCollectionEntry("test", 123)
     }
+
+    @Test
+    fun testSearchCollection() {
+        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/collection?username=test&stats=1".toHttpUrl()
+        val response: Response = mockk()
+        val slot = CapturingSlot<Request>()
+        every { httpClient.newCall(capture(slot)).execute() } returns
+            response
+        every { response.code } returns 200
+        every { response.body?.string() } returns File(MULTIPLE_COLLECTION_XML).readText()
+        every { response.close() } returns Unit
+        val puller = BggPuller(xmlMapper, httpClient)
+        val entries = puller.searchCollection("test")
+        verify(exactly = 1) {
+            httpClient.newCall(any()).execute()
+            response.code
+            response.body?.string()
+            response.close()
+        }
+        assertEquals(expectedUrl, slot.captured.url)
+        assertEquals(14, entries.size)
+    }
+
+    @Test
+    fun testSearchCollectionWithConfig() {
+        val expectedUrl = (
+            "https://www.boardgamegeek.com/xmlapi2/collection?username=test&stats=1&own=1&minrating=8" +
+                "&wishlistpriority=1"
+            )
+            .toHttpUrl()
+        val response: Response = mockk()
+        val slot = CapturingSlot<Request>()
+        every { httpClient.newCall(capture(slot)).execute() } returns
+            response
+        every { response.code } returns 200
+        every { response.body?.string() } returns File(MULTIPLE_COLLECTION_XML).readText()
+        every { response.close() } returns Unit
+        val puller = BggPuller(xmlMapper, httpClient)
+        val config = BggPuller.SearchCollectionConfig(
+            owned = true,
+            wishlistPriority = 1,
+            minRating = 8,
+            limit = 10,
+            sortBy = BggPuller.SortType.RATING
+        )
+        val entries = puller.searchCollection("test", config)
+        verify(exactly = 1) {
+            httpClient.newCall(any()).execute()
+            response.code
+            response.body?.string()
+            response.close()
+        }
+        assertEquals(expectedUrl, slot.captured.url)
+        assertEquals(10, entries.size)
+    }
 }
