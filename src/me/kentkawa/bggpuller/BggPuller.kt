@@ -29,6 +29,29 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
         val game: Game? = null
     )
 
+    data class SearchCollectionConfig(
+        val owned: Boolean? = null,
+        val wishlistPriority: Int? = null,
+        val minRating: Int? = null,
+        val limit: Int? = null,
+        val sortBy: SortType?,
+        val sortDescending: Boolean = false
+    )
+
+    enum class SortType {
+        RATING,
+        NAME;
+
+        fun getCompareWithComparator(): Comparator<CollectionEntry> {
+            return Comparator { o1, o2 ->
+                when (this@SortType) {
+                    RATING -> o1.rating.compareTo(o2.rating)
+                    NAME -> o1.game.name.compareTo(o2.game.name)
+                }
+            }
+        }
+    }
+
     fun getPlaysForUser(username: String, extraConfig: PlaysForUserRequestConfig? = null): PlaysForUser {
         val urlBuilder = getBggApiUrlBuilder()
             .addPathSegment(PLAY_PATH)
@@ -66,6 +89,48 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
             )
         }
         return bggCollection.entries[0]
+    }
+
+    fun searchCollection(username: String, config: SearchCollectionConfig? = null):
+        List<CollectionEntry> {
+            val urlBuilder = getBggApiUrlBuilder()
+                .addPathSegment(COLLECTION_PATH)
+                .addQueryParameter("username", username)
+                .addQueryParameter("stats", "1")
+            if (config?.owned == true) {
+                urlBuilder.addQueryParameter("own", "1")
+            }
+            if (config?.minRating != null) {
+                urlBuilder.addQueryParameter("minrating", config.minRating.toString())
+            }
+            if (config?.wishlistPriority != null) {
+                urlBuilder.addQueryParameter("wishlistpriority", config.wishlistPriority.toString())
+            }
+            val xmlData = sendGetRequest(urlBuilder.build(), retryOn202 = true)
+            val bggResponse: BggCollection = xmlMapper.readValue(xmlData)
+            return processResults(bggResponse.entries, config?.sortBy, config?.limit, config?.sortDescending ?: false)
+        }
+
+    private fun processResults(
+        entries: List<CollectionEntry>,
+        sortBy: SortType?,
+        limit: Int?,
+        sortDescending: Boolean
+    ): List<CollectionEntry> {
+        val sortedEntries = if (sortBy != null) {
+            var comparator = sortBy.getCompareWithComparator()
+            if (sortDescending) {
+                comparator = comparator.reversed()
+            }
+            entries.sortedWith(comparator)
+        } else {
+            entries
+        }
+        return if (limit != null && sortedEntries.size > limit) {
+            sortedEntries.dropLast(sortedEntries.size - limit)
+        } else {
+            sortedEntries
+        }
     }
 
     private fun getBggApiUrlBuilder(): HttpUrl.Builder {
