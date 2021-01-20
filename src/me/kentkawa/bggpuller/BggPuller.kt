@@ -25,7 +25,8 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
 
     data class PlaysForUserRequestConfig(
         val minDate: LocalDate? = null,
-        val maxDate: LocalDate? = null
+        val maxDate: LocalDate? = null,
+        val game: Game? = null
     )
 
     fun getPlaysForUser(username: String, extraConfig: PlaysForUserRequestConfig? = null): PlaysForUser {
@@ -37,6 +38,10 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
         }
         if (extraConfig?.maxDate != null) {
             urlBuilder.addQueryParameter("maxdate", extraConfig.maxDate.toString())
+        }
+        if (extraConfig?.game != null) {
+            urlBuilder.addQueryParameter("id", extraConfig.game.bggId.toString())
+            urlBuilder.addQueryParameter("type", "thing")
         }
         val xmlData = sendGetRequest(urlBuilder.build())
         return xmlMapper.readValue(xmlData)
