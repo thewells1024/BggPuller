@@ -9,6 +9,9 @@ import java.lang.IllegalStateException
 class BggCollectionParser : StdDeserializer<BggCollection>(BggCollection::class.java) {
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): BggCollection {
         val json = ctxt?.readTree(p) ?: throw IllegalStateException("cannot read tree")
-        return BggCollection(handlePossibleList(json.get("item"), ::readCollectionEntry))
+        return BggCollection(
+            json.get("totalitems").asInt(),
+            handlePossibleList(json.get("item"), ::readCollectionEntry)
+        )
     }
 }

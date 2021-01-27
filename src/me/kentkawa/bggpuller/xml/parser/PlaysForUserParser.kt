@@ -10,7 +10,8 @@ class PlaysForUserParser : StdDeserializer<PlaysForUser>(PlaysForUser::class.jav
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): PlaysForUser {
         val json = ctxt?.readTree(p) ?: throw IllegalStateException("Cannot read tree")
         val username = json.get("username").textValue()
+        val totalItems = json.get("total").asInt()
         val plays = handlePossibleList(json.get("play"), ::readPlay)
-        return PlaysForUser(username, plays)
+        return PlaysForUser(username, totalItems, plays)
     }
 }

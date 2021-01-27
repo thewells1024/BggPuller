@@ -6,11 +6,12 @@ import me.kentkawa.bggpuller.errors.MultipleEntriesInBggCollectionResponseExcept
 import me.kentkawa.bggpuller.model.BggCollection
 import me.kentkawa.bggpuller.model.CollectionEntry
 import me.kentkawa.bggpuller.model.Game
+import me.kentkawa.bggpuller.model.PagedResult
+import me.kentkawa.bggpuller.model.Play
 import me.kentkawa.bggpuller.model.PlaysForUser
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.lang.IllegalStateException
 import java.time.LocalDate
 
 class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpClient) {
@@ -32,7 +33,7 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
     data class SearchCollectionConfig(
         val owned: Boolean? = null,
         val wishlistPriority: Int? = null,
-        val minRating: Int? = null,
+        val minRating: Double? = null,
         val limit: Int? = null,
         val sortBy: SortType?,
         val sortDescending: Boolean = false
@@ -52,7 +53,7 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
         }
     }
 
-    fun getPlaysForUser(username: String, extraConfig: PlaysForUserRequestConfig? = null): PlaysForUser {
+    fun getPlaysForUser(username: String, extraConfig: PlaysForUserRequestConfig? = null): List<Play> {
         val urlBuilder = getBggApiUrlBuilder()
             .addPathSegment(PLAY_PATH)
             .addQueryParameter("username", username)
@@ -66,8 +67,7 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
             urlBuilder.addQueryParameter("id", extraConfig.game.bggId.toString())
             urlBuilder.addQueryParameter("type", "thing")
         }
-        val xmlData = sendGetRequest(urlBuilder.build())
-        return xmlMapper.readValue(xmlData)
+        return getAllResults<Play, PlaysForUser>(urlBuilder)
     }
 
     fun getCollectionEntry(username: String, game: Game): CollectionEntry {
@@ -106,9 +106,8 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
             if (config?.wishlistPriority != null) {
                 urlBuilder.addQueryParameter("wishlistpriority", config.wishlistPriority.toString())
             }
-            val xmlData = sendGetRequest(urlBuilder.build(), retryOn202 = true)
-            val bggResponse: BggCollection = xmlMapper.readValue(xmlData)
-            return processResults(bggResponse.entries, config?.sortBy, config?.limit, config?.sortDescending ?: false)
+            val entries = getAllResults<CollectionEntry, BggCollection>(urlBuilder, true)
+            return processResults(entries, config?.sortBy, config?.limit, config?.sortDescending ?: false)
         }
 
     private fun processResults(
@@ -131,6 +130,23 @@ class BggPuller(private val xmlMapper: ObjectMapper, private val client: OkHttpC
         } else {
             sortedEntries
         }
+    }
+
+    private inline fun <E, reified C : PagedResult<E>> getAllResults(urlBuilder: HttpUrl.Builder, retryOn202: Boolean = false): List<E> {
+        val unpagedResults = ArrayList<E>()
+        var page = 1
+        urlBuilder.setQueryParameter("page", (page++).toString())
+        var xmlData = sendGetRequest(urlBuilder.build(), retryOn202)
+        var pagedResult: C = xmlMapper.readValue(xmlData)
+        unpagedResults.addAll(pagedResult.items)
+        val totalResults = pagedResult.totalItems
+        while (unpagedResults.size < totalResults) {
+            urlBuilder.setQueryParameter("page", (page++).toString())
+            xmlData = sendGetRequest(urlBuilder.build(), retryOn202)
+            pagedResult = xmlMapper.readValue(xmlData)
+            unpagedResults.addAll(pagedResult.items)
+        }
+        return unpagedResults
     }
 
     private fun getBggApiUrlBuilder(): HttpUrl.Builder {
