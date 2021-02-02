@@ -22,8 +22,7 @@ class BggPullerIntegTest {
         val requestConfig = BggPuller.PlaysForUserRequestConfig(minDate = MIN_DATE, maxDate = MAX_DATE)
         val puller = BggPuller(xmlMapper, client)
         val plays = puller.getPlaysForUser("thewells1024", requestConfig)
-        assertEquals("thewells1024", plays.username)
-        assertEquals(4, plays.plays.size)
+        assertEquals(4, plays.size)
     }
 
     @Test

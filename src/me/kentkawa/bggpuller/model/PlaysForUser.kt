@@ -9,5 +9,9 @@ import me.kentkawa.bggpuller.xml.parser.PlaysForUserParser
 @JsonDeserialize(using = PlaysForUserParser::class)
 data class PlaysForUser(
     @JacksonXmlProperty(isAttribute = true) val username: String,
+    @JacksonXmlProperty(isAttribute = true, localName = "total") override val totalItems: Int,
     @JacksonXmlProperty(isAttribute = false) val plays: List<Play>
-)
+) : PagedResult<Play> {
+    override val items: List<Play>
+        get() = plays
+}

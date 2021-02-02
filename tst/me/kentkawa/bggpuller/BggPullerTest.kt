@@ -26,7 +26,7 @@ class BggPullerTest : XmlParserBaseTest() {
 
     @Test
     fun testGetPlaysForUsers() {
-        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test".toHttpUrl()
+        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&page=1".toHttpUrl()
         val response: Response = mockk()
         val slot = CapturingSlot<Request>()
         every { httpClient.newCall(capture(slot)).execute() } returns
@@ -45,7 +45,7 @@ class BggPullerTest : XmlParserBaseTest() {
 
     @Test
     fun testGetPlaysForUsersWithMinDate() {
-        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&mindate=2021-01-01".toHttpUrl()
+        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&mindate=2021-01-01&page=1".toHttpUrl()
         val response: Response = mockk()
         val slot = CapturingSlot<Request>()
         every { httpClient.newCall(capture(slot)).execute() } returns
@@ -65,7 +65,7 @@ class BggPullerTest : XmlParserBaseTest() {
 
     @Test
     fun testGetPlaysForUsersWithMaxDate() {
-        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&maxdate=2021-01-01".toHttpUrl()
+        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&maxdate=2021-01-01&page=1".toHttpUrl()
         val response: Response = mockk()
         val slot = CapturingSlot<Request>()
         every { httpClient.newCall(capture(slot)).execute() } returns
@@ -85,7 +85,7 @@ class BggPullerTest : XmlParserBaseTest() {
 
     @Test
     fun testGetPlaysForUsersWithGame() {
-        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&id=123&type=thing".toHttpUrl()
+        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/plays?username=test&id=123&type=thing&page=1".toHttpUrl()
         val response: Response = mockk()
         val slot = CapturingSlot<Request>()
         every { httpClient.newCall(capture(slot)).execute() } returns
@@ -139,7 +139,7 @@ class BggPullerTest : XmlParserBaseTest() {
 
     @Test
     fun testSearchCollection() {
-        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/collection?username=test&stats=1".toHttpUrl()
+        val expectedUrl = "https://www.boardgamegeek.com/xmlapi2/collection?username=test&stats=1&page=1".toHttpUrl()
         val response: Response = mockk()
         val slot = CapturingSlot<Request>()
         every { httpClient.newCall(capture(slot)).execute() } returns
@@ -162,8 +162,8 @@ class BggPullerTest : XmlParserBaseTest() {
     @Test
     fun testSearchCollectionWithConfig() {
         val expectedUrl = (
-            "https://www.boardgamegeek.com/xmlapi2/collection?username=test&stats=1&own=1&minrating=8" +
-                "&wishlistpriority=1"
+            "https://www.boardgamegeek.com/xmlapi2/collection?username=test&stats=1&own=1&minrating=8.0" +
+                "&wishlistpriority=1&page=1"
             )
             .toHttpUrl()
         val response: Response = mockk()
@@ -177,7 +177,7 @@ class BggPullerTest : XmlParserBaseTest() {
         val config = BggPuller.SearchCollectionConfig(
             owned = true,
             wishlistPriority = 1,
-            minRating = 8,
+            minRating = 8.0,
             limit = 10,
             sortBy = BggPuller.SortType.RATING
         )

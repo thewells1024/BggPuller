@@ -10,6 +10,10 @@ import me.kentkawa.bggpuller.xml.parser.BggCollectionParser
 @JsonDeserialize(using = BggCollectionParser::class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BggCollection(
+    override val totalItems: Int,
     @JacksonXmlProperty(localName = "item")
     val entries: List<CollectionEntry>
-)
+) : PagedResult<CollectionEntry> {
+    override val items: List<CollectionEntry>
+        get() = entries
+}
