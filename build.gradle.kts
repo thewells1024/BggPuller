@@ -14,6 +14,8 @@ plugins {
     `java-library`
 }
 
+group = "me.kentkawa"
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
